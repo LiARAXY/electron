@@ -420,6 +420,37 @@ index 28ca1646af0b0cce40d27baec71cbe65adc334fa..bae65c1f485bc02eb9ef2ebf7018af4a
  }
  
  }  // namespace
+diff --git a/content/renderer/theme_helper_mac.mm b/content/renderer/theme_helper_mac.mm
+index 1db129740992672a4e8be8100da18b6813f1a4f8..b1c3bbc0657eb837ca3b1e7e8469ca069b59788b 100644
+--- a/content/renderer/theme_helper_mac.mm
++++ b/content/renderer/theme_helper_mac.mm
+@@ -7,11 +7,11 @@
+ #include <Cocoa/Cocoa.h>
+ 
+ #include "base/strings/sys_string_conversions.h"
+-
++#if !defined(MAS_BUILD)
+ extern "C" {
+ bool CGFontRenderingGetFontSmoothingDisabled(void) API_AVAILABLE(macos(10.14));
+ }
+-
++#endif
+ namespace content {
+ 
+ void SystemColorsDidChange(int aqua_color_variant,
+@@ -57,10 +57,12 @@ void SystemColorsDidChange(int aqua_color_variant,
+ }
+ 
+ bool IsSubpixelAntialiasingAvailable() {
++#if !defined(MAS_BUILD)
+   if (__builtin_available(macOS 10.14, *)) {
+     // See https://trac.webkit.org/changeset/239306/webkit for more info.
+     return !CGFontRenderingGetFontSmoothingDisabled();
+   }
++#endif
+   return true;
+ }
+ 
 diff --git a/device/bluetooth/bluetooth_adapter_mac.mm b/device/bluetooth/bluetooth_adapter_mac.mm
 index 933483c36d94336c8e9cc56a53bc86aee01e12d0..a48b4af66fb4edcf74caef5bec68c53be5469fe8 100644
 --- a/device/bluetooth/bluetooth_adapter_mac.mm
